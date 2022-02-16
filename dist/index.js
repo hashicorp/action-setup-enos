@@ -65,7 +65,7 @@ function mapOS(os) {
 
 function getDownloadObject(version) {
   const platform = os.platform();
-  const filename = `gh_${ version }_${ mapOS(platform) }_${ mapArch(os.arch()) }`;
+  const filename = `bob_${ version }_${ mapOS(platform) }_${ mapArch(os.arch()) }`;
   const extension = platform === 'win32' ? 'zip' : 'tar.gz';
   const binPath = platform === 'win32' ? 'bin' : path.join(filename, 'bin');
   const url = `https://github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.${ extension }`;
@@ -74,6 +74,8 @@ function getDownloadObject(version) {
     binPath
   };
 }
+
+console.log(getDownloadObject(version));
 
 module.exports = { getDownloadObject }
 
