@@ -1,0 +1,10 @@
+name: setup-enos
+description: Setup GitHub CLI, enos, on GitHub Actions runners
+inputs:
+  version:
+    description: Version of Enos CLI to install
+    required: false
+    default: latest
+runs:
+  using: node16
+  main: dist/index.js
