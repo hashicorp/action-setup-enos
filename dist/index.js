@@ -4,7 +4,6 @@
 /***/ 932:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const path = __nccwpck_require__(17);
 const core = __nccwpck_require__(186);
 const tc = __nccwpck_require__(784);
 const { getDownloadObject } = __nccwpck_require__(918);
@@ -16,14 +15,13 @@ async function setup() {
 
     // Download the specific version of the tool, e.g. as a tarball/zipball
     const download = getDownloadObject(version);
-    const pathToTarball = await tc.downloadTool(download.url);
+    const pathTozip = await tc.downloadTool(download.url);
 
-    // Extract the tarball/zipball onto host runner
-    const extract = download.url.endsWith('.zip') ? tc.extractZip : tc.extractTar;
-    const pathToCLI = await extract(pathToTarball);
+    // Extract the zip file onto host runner
+    const pathToCLI = await tc.extractZip(pathTozip, '/usr/bin');
 
-    // Expose the tool by adding it to the PATH
-    core.addPath(path.join(pathToCLI, download.binPath));
+    console.log(pathToCLI)
+
   } catch (e) {
     core.setFailed(e);
   }
@@ -42,7 +40,6 @@ if (require.main === require.cache[eval('__filename')]) {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const os = __nccwpck_require__(37);
-const path = __nccwpck_require__(17);
 
 function getDownloadObject(version) {
   // arch in [arm, arm64, x64...] (https://nodejs.org/api/os.html#os_os_arch)
@@ -59,14 +56,12 @@ function getDownloadObject(version) {
   const platform = os.platform();
   
   const filename = `bob_${ version }_${platform}_${ mapArch(os.arch()) }`;
-  const binPath = path.join(filename, 'bin');
   const url = `https://github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
   
   console.log(url)
-  
+
   return {
-    url,
-    binPath
+    url
   };
 }
 
