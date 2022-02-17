@@ -44,38 +44,31 @@ if (require.main === require.cache[eval('__filename')]) {
 const os = __nccwpck_require__(37);
 const path = __nccwpck_require__(17);
 
-// arch in [arm, x32, x64...] (https://nodejs.org/api/os.html#os_os_arch)
-// return value in [amd64, 386, arm]
-function mapArch(arch) {
-  const mappings = {
-    x64: 'amd64'
-  };
-  return mappings[arch] || arch;
-}
-
-// os in [darwin, linux, win32...] (https://nodejs.org/api/os.html#os_os_platform)
-// return value in [darwin, linux, windows]
-function mapOS(os) {
-  const mappings = {
-    darwin: 'macOS',
-    win32: 'windows'
-  };
-  return mappings[os] || os;
-}
-
 function getDownloadObject(version) {
+  // arch in [arm, arm64, x64...] (https://nodejs.org/api/os.html#os_os_arch)
+  // return value in [amd64, arm64]
+  function mapArch(arch) {
+    const mappings = {
+      x64: 'amd64'
+    };
+    return mappings[arch] || arch;
+  }  
+
+  // https://nodejs.org/api/os.html#os_os_platform
+  // return value in ['aix', 'darwin', 'freebsd','linux', 'openbsd', 'sunos', and 'win32']
   const platform = os.platform();
-  const filename = `bob_${ version }_${ mapOS(platform) }_${ mapArch(os.arch()) }`;
-  const extension = platform === 'win32' ? 'zip' : 'tar.gz';
-  const binPath = platform === 'win32' ? 'bin' : path.join(filename, 'bin');
-  const url = `https://github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.${ extension }`;
+  
+  const filename = `bob_${ version }_${platform}_${ mapArch(os.arch()) }`;
+  const binPath = path.join(filename, 'bin');
+  const url = `https://github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
+  
+  console.log(url)
+  
   return {
     url,
     binPath
   };
 }
-
-console.log(getDownloadObject);
 
 module.exports = { getDownloadObject }
 
