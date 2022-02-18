@@ -6,13 +6,13 @@ async function setup() {
   try {
     // Get version of tool to be installed
     const version = core.getInput('version');
-    const ghtoken = core.getInput('github-token', { required: true });
+    const ghToken = core.getInput('github-token', { required: true });
 
     // Download the specific version of the tool, e.g. as a tarball/zipball
-    const download = getDownloadObject(version);
+    const download = getDownloadObject(version, ghToken);
     console.log(download.url)
 
-    const pathTozip = await tc.downloadTool(download.url, ghtoken);
+    const pathTozip = await tc.downloadTool(download.url);
     console.log(pathTozip)
 
     // Extract the zip file onto host runner

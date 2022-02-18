@@ -12,13 +12,13 @@ async function setup() {
   try {
     // Get version of tool to be installed
     const version = core.getInput('version');
-    const ghtoken = core.getInput('github-token', { required: true });
+    const ghToken = core.getInput('github-token', { required: true });
 
     // Download the specific version of the tool, e.g. as a tarball/zipball
-    const download = getDownloadObject(version);
+    const download = getDownloadObject(version, ghToken);
     console.log(download.url)
 
-    const pathTozip = await tc.downloadTool(download.url, ghtoken);
+    const pathTozip = await tc.downloadTool(download.url);
     console.log(pathTozip)
 
     // Extract the zip file onto host runner
@@ -45,7 +45,7 @@ if (require.main === require.cache[eval('__filename')]) {
 
 const os = __nccwpck_require__(37);
 
-function getDownloadObject(version) {
+function getDownloadObject(version, ghToken) {
   // arch in [arm, arm64, x64...] (https://nodejs.org/api/os.html#os_os_arch)
   // return value in [amd64, arm64]
   function mapArch(arch) {
@@ -58,8 +58,10 @@ function getDownloadObject(version) {
   // https://nodejs.org/api/os.html#os_os_platform
   // return value in ['aix', 'darwin', 'freebsd','linux', 'openbsd', 'sunos', and 'win32']
   const platform = os.platform();
+
+  const tokenWithPrefix = `x-access-token:${ghToken}`;
   const filename = `bob_${ version }_${platform}_${ mapArch(os.arch()) }`;
-  const url = `https://github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
+  const url = `https://${tokenWithPrefix}@github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
   
   console.log(url)
 
