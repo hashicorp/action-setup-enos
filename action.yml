@@ -1,6 +1,9 @@
 name: setup-enos
 description: Setup GitHub CLI, enos, on GitHub Actions runners
 inputs:
+  github-token:
+    description: "GitHub token to access the release."
+    required: true
   version:
     description: Version of Enos CLI to install
     required: false

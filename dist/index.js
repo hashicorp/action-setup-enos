@@ -12,10 +12,11 @@ async function setup() {
   try {
     // Get version of tool to be installed
     const version = core.getInput('version');
+    const ghtoken = core.getInput('github-token', { required: true });
 
     // Download the specific version of the tool, e.g. as a tarball/zipball
     const download = getDownloadObject(version);
-    const pathTozip = await tc.downloadTool(download.url);
+    const pathTozip = await tc.downloadTool(download.url, ghtoken);
 
     // Extract the zip file onto host runner
     const pathToCLI = await tc.extractZip(pathTozip, '/usr/bin');
@@ -54,7 +55,6 @@ function getDownloadObject(version) {
   // https://nodejs.org/api/os.html#os_os_platform
   // return value in ['aix', 'darwin', 'freebsd','linux', 'openbsd', 'sunos', and 'win32']
   const platform = os.platform();
-  
   const filename = `bob_${ version }_${platform}_${ mapArch(os.arch()) }`;
   const url = `https://github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
   
