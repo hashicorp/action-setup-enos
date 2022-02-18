@@ -10,7 +10,10 @@ async function setup() {
 
     // Download the specific version of the tool, e.g. as a tarball/zipball
     const download = getDownloadObject(version);
+    console.log(download.url)
+
     const pathTozip = await tc.downloadTool(download.url, ghtoken);
+    console.log(pathTozip)
 
     // Extract the zip file onto host runner
     const pathToCLI = await tc.extractZip(pathTozip, '/usr/bin');
