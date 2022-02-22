@@ -7,22 +7,23 @@
 const core = __nccwpck_require__(186);
 const tc = __nccwpck_require__(784);
 const { getDownloadObject } = __nccwpck_require__(918);
+// const octokit = require('./lib/octokit');
+// const utils = require('./lib/utils');
 
 async function setup() {
   try {
     // Get version of tool to be installed
     const version = core.getInput('version');
     const ghToken = core.getInput('github-token', { required: true });
+    // const client = await octokit(ghToken);
+    const tempDirectory = process.env['RUNNER_TEMP'] || '';
 
     // Download the specific version of the tool, e.g. as a tarball/zipball
-    const download = getDownloadObject(version, ghToken);
-    console.log(download.url)
-
-    const pathTozip = await tc.downloadTool(download.url);
-    console.log(pathTozip)
+    const download = getDownloadObject(version, ghToken, tempDirectory);
+    console.log(download)
 
     // Extract the zip file onto host runner
-    const pathToCLI = await tc.extractZip(pathTozip, '/usr/bin');
+    const pathToCLI = await tc.extractZip(download, '/usr/bin');
 
     console.log(pathToCLI)
 
@@ -44,8 +45,12 @@ if (require.main === require.cache[eval('__filename')]) {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const os = __nccwpck_require__(37);
+const fs = __nccwpck_require__(147);
+const path = __nccwpck_require__(17);
+// const core = require('@actions/core');
+const got = __nccwpck_require__(417);
 
-function getDownloadObject(version, ghToken) {
+function getDownloadObject(version, ghToken, tempDirectory) {
   // arch in [arm, arm64, x64...] (https://nodejs.org/api/os.html#os_os_arch)
   // return value in [amd64, arm64]
   function mapArch(arch) {
@@ -60,14 +65,45 @@ function getDownloadObject(version, ghToken) {
   const platform = os.platform();
 
   const filename = `bob_${ version }_${platform}_${ mapArch(os.arch()) }`;
-  const url = `https://x-access-token:${ghToken}@github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
+  const downloadPath = path.resolve(tempDirectory, filename);
+  const file = fs.createWriteStream(downloadPath);
+  // const url = `https://x-access-token:${ghToken}@github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
+  const url = `https://github.com/hashicorp/bob/releases/download/v${ version }/${ filename }.zip`;
   
   console.log(url)
 
-  return {
-    url
-  };
+  const response = got(url, {
+    method: 'GET',
+    headers: {
+        authorization: `token ${ghToken}`,
+        accept: 'application/octet-stream',
+    },
+  });
+
+  if (response.statusCode === 404) {
+  throw 'Not Found'
+  }
+
+  file.write(Buffer.from(response.rawBody));
+  file.end();
+
+  return downloadPath;
 }
+//   return {
+//     url
+//   };
+// }
+
+// async function extractReleaseAsset(client, download) {
+//   client.log.info(`Extracting release asset: ${download}`);
+
+//   try {
+//     return await tc.extractZip(download);
+//   } catch (err) {
+//     client.log.error(`Unable to extract release asset (${download}): ${err}`);
+//     throw err;
+//   }
+// }
 
 module.exports = { getDownloadObject }
 
@@ -5475,6 +5511,14 @@ function v4(options, buf, offset) {
 }
 
 module.exports = v4;
+
+
+/***/ }),
+
+/***/ 417:
+/***/ ((module) => {
+
+module.exports = eval("require")("got");
 
 
 /***/ }),
