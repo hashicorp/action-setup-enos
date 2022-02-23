@@ -68,12 +68,12 @@ async function versionNumber() {
     throw new Error(`error executing ${executableName} version: ${stderr}`);
   }
 
-  // Expected output: bob v#.#.# ()
-  if (stdout.length === 0 || stdout.split(' ').length !== 3) {
-    throw new Error(`unexpected ${executableName} version output: ${stdout}`);
-  }
+  // Expected output: bob #.#.# ()
+  // if (stdout.length === 0) {
+  //   throw new Error(`unexpected ${executableName} version output: ${stdout}`);
+  // }
 
-  return stdout.split(' ')[1].substring(1)
+  return stdout
 }
 
 exports.downloadReleaseAsset = downloadReleaseAsset;
