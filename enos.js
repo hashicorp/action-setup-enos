@@ -50,7 +50,7 @@ async function version() {
   };
 
   try {
-    await exec.exec(executableName, ['version'], execOptions);
+    await exec.exec(executableName, ['--version'], execOptions);
   } catch (err) {
     throw new Error(`error executing ${executableName}: ${err}`);
   }
