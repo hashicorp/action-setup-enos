@@ -5,7 +5,7 @@
   "main": "action.js",
   "scripts": {
     "lint": "eslint .",
-    "prepare": "ncc build action.js -o dist --license licenses.txt",
+    "prepare": "ncc build index.js -o dist --license licenses.txt",
     "all": "npm run lint && npm run prepare"
   },
   "repository": {
@@ -26,8 +26,7 @@
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.0",
-    "@actions/tool-cache": "^1.7.1",
-    "got": "^12.0.1"
+    "@actions/tool-cache": "^1.7.1"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.33.3",
