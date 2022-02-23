@@ -2,10 +2,10 @@
   "name": "action-setup-enos",
   "version": "0.0.1",
   "description": "Setup Enos CLI for GitHub Actions",
-  "main": "index.js",
+  "main": "action.js",
   "scripts": {
     "lint": "eslint .",
-    "prepare": "ncc build index.js -o dist --license licenses.txt",
+    "prepare": "ncc build action.js -o dist --license licenses.txt",
     "all": "npm run lint && npm run prepare"
   },
   "repository": {
