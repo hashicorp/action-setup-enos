@@ -22,8 +22,6 @@ async function run() {
     const platform = os.platform();
     const tempDirectory = process.env['RUNNER_TEMP'] || '';
 
-    enos.ensureSupportedGoPlatform(platform, architecture);
-
     let version = enos.latestVersion;
 
     if (configuredVersion !== undefined && configuredVersion.length > 0) {
