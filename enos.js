@@ -2,10 +2,10 @@ const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
 
 const githubRelease = require('./github-release');
-const executableName = 'bob';
+const executableName = 'enos';
 const gitHubRepositoryOwner = 'hashicorp';
-const gitHubRepositoryRepo = 'bob';
-const latestVersion = '0.0.19';
+const gitHubRepositoryRepo = 'enos';
+const latestVersion = '0.0.1';
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
   return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
@@ -67,11 +67,6 @@ async function versionNumber() {
   if (stderr.length > 0) {
     throw new Error(`error executing ${executableName} version: ${stderr}`);
   }
-
-  // Expected output: bob #.#.# ()
-  // if (stdout.length === 0) {
-  //   throw new Error(`unexpected ${executableName} version output: ${stdout}`);
-  // }
 
   return stdout
 }

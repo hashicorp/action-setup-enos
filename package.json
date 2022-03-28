@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint .",
     "prepare": "ncc build index.js -o dist --license licenses.txt",
-    "all": "npm run lint && npm run prepare"
+    "test": "jest",
+    "all": "npm run lint && npm run prepare && npm run test"
   },
   "repository": {
     "type": "git",

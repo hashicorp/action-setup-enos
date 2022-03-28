@@ -66,10 +66,10 @@ const exec = __nccwpck_require__(1514);
 const tc = __nccwpck_require__(7784);
 
 const githubRelease = __nccwpck_require__(3098);
-const executableName = 'bob';
+const executableName = 'enos';
 const gitHubRepositoryOwner = 'hashicorp';
-const gitHubRepositoryRepo = 'bob';
-const latestVersion = '0.0.19';
+const gitHubRepositoryRepo = 'enos';
+const latestVersion = '0.0.1';
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
   return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
@@ -132,11 +132,6 @@ async function versionNumber() {
     throw new Error(`error executing ${executableName} version: ${stderr}`);
   }
 
-  // Expected output: bob #.#.# ()
-  // if (stdout.length === 0) {
-  //   throw new Error(`unexpected ${executableName} version output: ${stdout}`);
-  // }
-
   return stdout
 }
 
@@ -157,10 +152,6 @@ const fs = __nccwpck_require__(7147);
 const path = __nccwpck_require__(1017);
 const core = __nccwpck_require__(2186);
 const got = __nccwpck_require__(3061);
-// const stream = require('stream');
-// const util = require('util');
-
-// const pipeline = util.promisify(stream.pipeline);
 
 async function downloadAsset(client, owner, repo, releaseAsset, directory) {
     client.log.info(`Downloading release asset: ${releaseAsset.name}`);
@@ -168,16 +159,6 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
     try {
         const downloadPath = path.resolve(directory, releaseAsset.name);
         const file = fs.createWriteStream(downloadPath);
-        // const response = await client.rest.repos.getReleaseAsset({
-        //     // headers: {
-        //     //     Accept: 'application/octet-stream',
-        //     // },
-        //     owner: owner,
-        //     repo: repo,
-        //     asset_id: releaseAsset.id,
-        // });
-
-        // client.log.info(`full client ${JSON.stringify(response)}`);
         
         // Workaround since oktokit asset downloads are broken https://github.com/octokit/core.js/issues/415
         const githubToken = core.getInput('github-token');
