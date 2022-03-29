@@ -5,24 +5,19 @@ The structure and tests are adopted from `setup-hc-releases`.
 
 ## Usage
 
-Setup the `enos` CLI:
+Setup the `enos` CLI with specific version of the `enos` CLI can be installed::
 
 ```yaml
 steps:
-- uses: hashicorp/action-setup-enos@v1
-  with:
-    github-token:
-      ${{ secrets.GITHUB_TOKEN }}
-```
-
-A specific version of the `enos` CLI can be installed:
-
-```yaml
-steps:
-- uses: hashicorp/action-setup-enos
-  with:
-    version:
-      0.0.1
+ - name: Setup Enos
+   uses: hashicorp/action-setup-enos@v1
+   with:
+     github-token:
+       ${{ secrets.GITHUB_TOKEN }}
+     version:
+       0.0.1-pre+7f6e1
+- name: Check Enos version
+  run: enos version
 ```
 
 ## Inputs
