@@ -15,7 +15,7 @@ steps:
      github-token:
        ${{ secrets.GITHUB_TOKEN }}
      version:
-       0.0.1-pre+7f6e1
+       0.0.1
 - name: Check Enos version
   run: enos version
 ```
@@ -25,3 +25,6 @@ The actions supports the following inputs:
 
 - `github-token`: The GitHub token secret to use with permissions to download `enos` CLI
 - `version`: The version of `enos` to install, defaulting to `0.0.1`
+
+# Update Enos Action
+To update the Enos Action run `npm run all` to compile and load the npm modules with the latest code updates.
