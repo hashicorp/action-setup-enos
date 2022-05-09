@@ -5,10 +5,16 @@ The structure and tests are adopted from `setup-hc-releases`.
 
 ## Usage
 
-Setup the `enos` CLI with specific version of the `enos` CLI can be installed::
+Setup the `enos` CLI with specific version of the `enos` CLI can be installed:
 
 ```yaml
 steps:
+  - name: Setup Terraform
+    uses: hashicorp/setup-terraform@v1
+    with:
+      # Disable the wrapper because it breaks JSON output formatting which enos
+      # relies on.
+      terraform_wrapper: false
  - name: Setup Enos
    uses: hashicorp/action-setup-enos@v1
    with:
