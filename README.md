@@ -3,6 +3,23 @@ GitHub action to setup `enos` CLI. This action can be run on `ubuntu-latest` and
 
 The structure and tests are adopted from `setup-hc-releases`.
 
+## Pre-requisite
+Enos CLI requires Terraform CLI to be setup.  Install the Terraform CLI using `setup-terraform` GitHub
+action. Also set `terraform-wrapper` to `false` as the terraform wrapper will break terraform execution in enos because it changes the output to text when we expect it to be JSON.
+
+### setup-terraform GitHub Action
+
+```yaml
+steps:
+ - name: Setup Terraform
+   uses: hashicorp/setup-terraform@v1
+   with:
+     # the terraform wrapper will break terraform execution in enos because
+     # it changes the output to text when we expect it to be JSON.
+     terraform_wrapper: false
+     cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+```
+
 ## Usage
 
 Setup the `enos` CLI with specific version of the `enos` CLI can be installed::
