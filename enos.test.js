@@ -22,7 +22,7 @@ describe('download release asset', () => {
   test('downloads successfully', async () => {
     const releaseAsset = {
       id: 1,
-      name: "enos_0.0.1_linux_amd64.zip",
+      name: "enos_0.0.2_linux_amd64.zip",
     };
 
     fs.mkdtemp(path.join(os.tmpdir(), 'setup-enos-'), async (err, directory) => {
@@ -49,7 +49,7 @@ describe('download release asset', () => {
   test('throws error', async () => {
     const releaseAsset = {
       id: 1,
-      name: "enos_0.0.1_linux_amd64.zip",
+      name: "enos_0.0.2_linux_amd64.zip",
     };
     fs.mkdtemp(path.join(os.tmpdir(), 'setup-enos-'), async (err, directory) => {
       if (err) throw err;
@@ -94,22 +94,22 @@ describe('get release asset', () => {
       assets: [
         {
           id: 1,
-          name: "enos_0.0.1_darwin_amd64.zip"
+          name: "enos_0.0.2_darwin_amd64.zip"
         },
         {
           id: 2,
-          name: "enos_0.0.1_linux_amd64.zip"
+          name: "enos_0.0.2_linux_amd64.zip"
         },
       ],
       id: "1",
-      name: "v0.0.1",
+      name: "v0.0.2",
     };
 
     nock('https://api.github.com')
-      .get(`/repos/hashicorp/enos/releases/tags/v0.0.1`)
+      .get(`/repos/hashicorp/enos/releases/tags/v0.0.2`)
       .reply(200, mockRelease);
 
-    const releaseAsset = await enos.getReleaseAsset(client, '0.0.1', goOperatingSystem, goArchitecture);
+    const releaseAsset = await enos.getReleaseAsset(client, '0.0.2', goOperatingSystem, goArchitecture);
 
     await expect(releaseAsset).toEqual(mockRelease.assets.find((asset) => asset.name.includes(goOperatingSystem) && asset.name.includes(goArchitecture)));
   })
@@ -119,30 +119,30 @@ describe('get release asset', () => {
       assets: [
         {
           id: 1,
-          name: "enos_0.0.1_darwin_amd64.zip"
+          name: "enos_0.0.2_darwin_amd64.zip"
         },
         {
           id: 2,
-          name: "enos_0.0.1_linux_amd64.zip"
+          name: "enos_0.0.2_linux_amd64.zip"
         },
       ],
       id: "1",
-      name: "v0.0.1",
+      name: "v0.0.2",
     };
 
     nock('https://api.github.com')
-      .get(`/repos/hashicorp/enos/releases/tags/v0.0.1`)
+      .get(`/repos/hashicorp/enos/releases/tags/v0.0.2`)
       .reply(200, mockRelease);
 
-    await expect(enos.getReleaseAsset(client, '0.0.1', 'darwin', '386')).rejects.toThrow('Release asset not found in release');
+    await expect(enos.getReleaseAsset(client, '0.0.2', 'darwin', '386')).rejects.toThrow('Release asset not found in release');
   });
 
   test('throws release not found error', async () => {
     nock('https://api.github.com')
-      .get(`/repos/hashicorp/enos/releases/tags/v0.0.1`)
+      .get(`/repos/hashicorp/enos/releases/tags/v0.0.2`)
       .reply(404, 'Not Found');
 
-    await expect(enos.getReleaseAsset(client, '0.0.1', 'linux', 'amd64')).rejects.toThrow('Not Found');
+    await expect(enos.getReleaseAsset(client, '0.0.2', 'linux', 'amd64')).rejects.toThrow('Not Found');
   });
 });
 
@@ -150,14 +150,14 @@ describe('version', () => {
   test('stdout', async () => {
     const spy = jest.spyOn(exec, 'exec');
     spy.mockImplementation((commandLine, args, options) => {
-      options.listeners.stdout('enos v0.0.1 ()');
+      options.listeners.stdout('enos v0.0.2 ()');
       Promise.resolve();
     });
 
     const result = await enos.version();
 
     await expect(spy).toHaveBeenCalled();
-    await expect(result).toEqual({ stderr: '', stdout: 'enos v0.0.1 ()' });
+    await expect(result).toEqual({ stderr: '', stdout: 'enos v0.0.2 ()' });
   });
 
   test('stderr', async () => {
