@@ -7,7 +7,7 @@ inputs:
   version:
     description: Version of Enos CLI to install
     required: false
-    default: '0.0.4'
+    default: '0.0.5'
 runs:
   using: node16
   main: dist/index.js
