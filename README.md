@@ -45,3 +45,19 @@ The actions supports the following inputs:
 
 # Update Enos Action
 To update the Enos Action run `npm run all` to compile and load the npm modules with the latest code updates.
+
+# Release Process
+To release the updated version of Enos Action run the following steps:
+1. Replace the `Enos` version in following files:
+  -  README.md
+  -  action.yml
+  -  enos.js
+  -  package.json
+1. Run `npm run all`
+1. Create a PR with updated files above and the generated `dist/index.js`
+1. Get reviewed and the PR merged
+1. (Automated with `tagrelease` GitHub Actions Workflow) Add github tags to `main` branch and force update `v1` tag by running the following commands
+   - `git tag -a -m "v1.5" v1.5`
+   - `git tag -a -m "v1.5" v1 -f`
+   - `git push --tags -f`
+
