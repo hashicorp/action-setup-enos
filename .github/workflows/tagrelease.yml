@@ -1,0 +1,30 @@
+name: "Tag Release"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tag-release:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}   # checkout the correct branch name
+          fetch-depth: 0                # fetch the whole repo history
+      - name: Tag Release
+        run: |
+          TAG=$(git tag -l |awk -F. '{print $2}'|sort -n |tail -n 1)
+          echo $TAG
+          TAG1=$(echo $TAG+1 | bc)
+          echo $TAG1
+          export UPDATED_TAG="v1.$TAG1"
+          git tag -a -m "$UPDATED_TAG" $UPDATED_TAG
+          git tag -a -m "$UPDATED_TAG" v1 -f
+          git push --tags -f
+
+
