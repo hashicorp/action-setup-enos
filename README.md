@@ -49,10 +49,10 @@ To update the Enos Action run `npm run all` to compile and load the npm modules 
 # Release Process
 To release the updated version of Enos Action run the following steps:
 1. Replace the `Enos` version in following files:
-  -  README.md
-  -  action.yml
-  -  enos.js
-  -  package.json
+    -  README.md
+    -  action.yml
+    -  enos.js
+    -  package.json
 1. Run `npm run all`
 1. Create a PR with updated files above and the generated `dist/index.js`
 1. Get reviewed and the PR merged
