@@ -9,6 +9,8 @@ The structure and tests are adopted from `setup-hc-releases`.
 
 In order to use the `action-setup-enos` action and download the `enos` CLI, your repo needs to have a Github secret containing a token with `repo` scope. If your repo is already integrated with CRT, your `ELEVATED_GITHUB_TOKEN` should be sufficient for this. The only additional step is to ensure that your service account user associated with this token has read access to both the `action-setup-enos` [repo](https://github.com/hashicorp/action-setup-enos) and the `enos` [repo](https://github.com/hashicorp/enos). Reach out to the team on Slack in #team-quality to get your user added to both repos.
 
+**Note:** This token must also be "authorized" to the HashiCorp org via SSO. To do this, you would need to log in to Github as the service account user associated with the token, and follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on).
+
 ### `setup-terraform` GitHub Action
 
 The `enos` CLI requires the `terraform` binary to be in the default `PATH`. Install the Terraform CLI using `setup-terraform` GitHub
