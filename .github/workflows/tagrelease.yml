@@ -1,7 +1,10 @@
 name: "Tag Release"
 
 on:
+  # Run this workflow only when dist/index.js is updated
   push:
+    paths:
+      - 'dist/index.js'
     branches:
       - main
 
