@@ -39,7 +39,7 @@ steps:
      github-token:
        ${{ secrets.GITHUB_TOKEN }}
      version:
-       0.0.11
+       0.0.12
 - name: Check Enos version
   run: enos version
 ```
@@ -67,4 +67,3 @@ To release the updated version of Enos Action run the following steps:
    - `git tag -a -m "v1.5" v1.5`
    - `git tag -a -m "v1.5" v1 -f`
    - `git push --tags -f`
-
