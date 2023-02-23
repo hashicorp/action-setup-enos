@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const core = require('@actions/core');
 const { GitHub, getOctokitOptions } = require('@actions/github/lib/utils')
 const { retry } = require('@octokit/plugin-retry')

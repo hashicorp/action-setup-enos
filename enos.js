@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
 
