@@ -79,10 +79,15 @@ const githubRelease = __nccwpck_require__(3098);
 const executableName = 'enos';
 const gitHubRepositoryOwner = 'hashicorp';
 const gitHubRepositoryRepo = 'enos';
-const latestVersion = '0.0.16';
+const latestVersion = '0.0.18';
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
-  return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
+  try {
+    return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
+    } catch (err) {
+      client.log.error(`Unable to download release asset: ${releaseAsset.name}: ${err}`)
+      throw err
+   }
 }
 
 async function extractReleaseAsset(client, downloadPath) {
@@ -173,15 +178,13 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
 
     try {
         const downloadPath = path.resolve(directory, releaseAsset.name);
-        const file = fs.createWriteStream(downloadPath);
-        
         // Workaround since oktokit asset downloads are broken https://github.com/octokit/core.js/issues/415
         const githubToken = core.getInput('github-token');
 
         if (typeof releaseAsset.url === "undefined") { // template url for tests
             releaseAsset.url = `https://api.github.com/repos/${owner}/${repo}/releases/assets/${releaseAsset.id}`;
         }
-        
+
         const response = await got(releaseAsset.url, {
                 method: 'GET',
                 headers: {
@@ -194,8 +197,13 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
             throw 'Not Found'
         }
 
-        file.write(Buffer.from(response.rawBody));
-        file.end();
+        // I'm now no longer 100% sure this was the culprit, lets log just in case it bites us again
+        client.log.info(`Release asset ${releaseAsset.name} size: ${response.rawBody.length}`);
+        if (response.rawBody.length == 0) {
+            throw 'Empty Asset'
+        }
+
+        await fs.promises.writeFile(downloadPath, Buffer.from(response.rawBody));
 
         return downloadPath;
     } catch (err) {
