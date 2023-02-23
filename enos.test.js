@@ -64,8 +64,8 @@ describe('download release asset', () => {
         .reply(404, 'Not Found');
 
       const enos = require('./enos')
-
-      await expect(enos.downloadReleaseAsset(client, releaseAsset, directory)).rejects.toThrow('Not Found');
+      const result = enos.downloadReleaseAsset(client, releaseAsset, directory)
+      await expect(result).rejects.toThrow('Not Found');
     });
   });
 });
