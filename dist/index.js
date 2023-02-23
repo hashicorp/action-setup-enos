@@ -1,13 +1,13 @@
-/**
- * Copyright (c) HashiCorp, Inc.
- * SPDX-License-Identifier: MPL-2.0
- */
-
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 4582:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
 const process = __nccwpck_require__(7282);
 const core = __nccwpck_require__(2186);
@@ -66,6 +66,11 @@ module.exports = run;
 
 /***/ 4344:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
 const exec = __nccwpck_require__(1514);
 const tc = __nccwpck_require__(7784);
@@ -152,6 +157,11 @@ exports.versionNumber = versionNumber;
 
 /***/ 3098:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
 const fs = __nccwpck_require__(7147);
 const path = __nccwpck_require__(1017);
@@ -23970,6 +23980,11 @@ function wrappy (fn, cb) {
 /***/ 1261:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const core = __nccwpck_require__(2186);
 const { GitHub, getOctokitOptions } = __nccwpck_require__(3030)
 const { retry } = __nccwpck_require__(6298)
@@ -24251,6 +24266,11 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const action = __nccwpck_require__(4582);
 
 async function run() {
