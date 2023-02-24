@@ -197,7 +197,6 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
             throw 'Not Found'
         }
 
-        // I'm now no longer 100% sure this was the culprit, lets log just in case it bites us again
         client.log.info(`Release asset ${releaseAsset.name} size: ${response.rawBody.length}`);
         if (response.rawBody.length == 0) {
             throw 'Empty Asset'
