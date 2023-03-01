@@ -1,0 +1,24 @@
+---
+name: Validate
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-version:
+    name: "Check Enos version"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: "Verify Enos version is released & latest"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ver1=$(grep "const latestVersion" enos.js|awk '{print $4}'| tr -d ';')
+          ver2=$(grep "default" action.yml| awk '{print $2}')
+          if [ "$ver1" != "$ver2" ]; then echo "Versions in enos.js and action.yml don't match!"; exit 1; fi
+          gh release -R hashicorp/enos list | head -n1 | grep ${ver1}
+
