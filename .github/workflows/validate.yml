@@ -20,5 +20,5 @@ jobs:
           ver1=$(grep "const latestVersion" enos.js|awk '{print $4}'| tr -d ';')
           ver2=$(grep "default" action.yml| awk '{print $2}')
           if [ "$ver1" != "$ver2" ]; then echo "Versions in enos.js and action.yml don't match!"; exit 1; fi
-          gh release -R hashicorp/enos list | head -n1 | grep ${ver1}
+          gh release --repo https://github.com/hashicorp/enos list | head -n1 | grep ${ver1}
 
