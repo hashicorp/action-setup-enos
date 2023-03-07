@@ -29,5 +29,5 @@ jobs:
         run: |
           version=$(enos version)
           echo $version
-          latest=$(gh release -R hashicorp/enos list | head -n1)
-          echo $latest
+          latest=$(gh release view -R hashicorp/enos --json tagName --jq '.tagName')
+          if [[ "v${version}" != "${latest}" ]]; then echo "Action didn't install latest enos release!"; exit 1; fi
