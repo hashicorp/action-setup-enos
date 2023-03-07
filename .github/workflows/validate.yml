@@ -1,0 +1,25 @@
+---
+name: Validate
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    name: "Validate Action"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: "Run npm tests"
+        run: npm install && npm test
+      - name: "Run action itself"
+        uses: ./ #this took a full day to figure out and I hate it
+        with:
+          github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
