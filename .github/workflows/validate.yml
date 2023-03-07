@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 16
       - name: "Run tests"
-        run: npm test
+        run: npm install && npm test
 
       - name: "Validate Action Exectution"
         uses: hashicorp/action-setup-enos@v1
