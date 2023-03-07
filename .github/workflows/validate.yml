@@ -22,6 +22,6 @@ jobs:
         run: npm install && npm test
 
       - name: "Validate Action Exectution"
-        uses: hashicorp/action-setup-enos@v1
+        uses: hashicorp/action-setup-enos@{{github.GITHUB_SHA}}
         with:
           github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
