@@ -13,15 +13,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 16
       - name: "Run tests"
         run: npm install && npm test
-
-      - name: "Validate Action Exectution"
-        uses: hashicorp/action-setup-enos@${{github.GITHUB_SHA}}
+      - name: "Validate action"
+        uses: ./ #this took a full day to figure out and I hate it
         with:
           github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
