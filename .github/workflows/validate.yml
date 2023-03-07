@@ -23,3 +23,11 @@ jobs:
         uses: ./ #this took a full day to figure out and I hate it
         with:
           github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
+      - name: "Check version"
+        env:
+          GITHUB_TOKEN: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
+        run: |
+          version=$(enos version)
+          echo $version
+          latest=$(gh release -R hashicorp/enos list | head -n1)
+          echo $latest
