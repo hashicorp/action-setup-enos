@@ -17,9 +17,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: "Run npm tests"
+      - name: "Run tests"
         run: npm install && npm test
-      - name: "Run action itself"
+      - name: "Validate action installation"
         uses: ./ #this took a full day to figure out and I hate it
         with:
           github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
+      - name: "Check action & latest released versions"
+        env:
+          GITHUB_TOKEN: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
+        run: |
+          version=$(enos version)
+          latest=$(gh release view -R hashicorp/enos --json tagName --jq '.tagName')
+          if [[ "v${version}" != "${latest}" ]];
+          then
+            echo "Action installed version ${version} when ${latest} is latest!";
+            exit 1;
+          fi
