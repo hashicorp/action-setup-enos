@@ -17,8 +17,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: "Run tests"
-        run: npm install && npm test
+      - name: "NPM Install"
+        run: npm install
+      - name: "ESLint"
+        run: npm run lint
+      - name: "NPM Test"
+        run: npm test
       - name: "Validate action installation"
         uses: ./ #this took a full day to figure out and I hate it
         with:
