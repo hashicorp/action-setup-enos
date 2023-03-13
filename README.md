@@ -60,10 +60,11 @@ To release the updated version of Enos Action run the following steps:
     -  enos.js
 2. Update the `action-setup-enos` version in
     -  package.json
-3. Run `npm run all`
+3. Run `npm install && npm run all`
 4. Create a PR with updated files above and the generated `dist/index.js`
 5. Get reviewed and the PR merged
 6. (Automated with `tagrelease` GitHub Actions Workflow) Add github tags to `main` branch and force update `v1` tag by running the following commands
-   - `git tag -a -m "v1.5" v1.5`
-   - `git tag -a -m "v1.5" v1 -f`
+   - `TAG="v$(cat package.json| jq -r '.version')"`
+   - `git tag -a -m "$TAG" $TAG`
+   - `git tag -a -m "$TAG" v1 -f`
    - `git push --tags -f`

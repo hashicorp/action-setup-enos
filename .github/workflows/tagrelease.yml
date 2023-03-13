@@ -1,10 +1,10 @@
 name: "Tag Release"
 
 on:
-  # Run this workflow only when dist/index.js is updated
+  # Run this workflow only when package.json is updated
   push:
     paths:
-      - 'dist/index.js'
+      - "package.json"
     branches:
       - main
 
@@ -17,21 +17,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}   # checkout the correct branch name
-          fetch-depth: 0                # fetch the whole repo history
+          ref: ${{ github.head_ref }} # checkout the correct branch name
+          fetch-depth: 0 # fetch the whole repo history
       - name: Setup GitHub User
         run: |
           git config --global user.email "team-secure-quality@hashicorp.com"
           git config --global user.name "QTI Team"
       - name: Tag Release
         run: |
-          TAG=$(git tag -l |awk -F. '{print $2}'|sort -n |tail -n 1)
-          echo $TAG
-          TAG1=$(echo $TAG+1 | bc)
-          echo $TAG1
-          export UPDATED_TAG="v1.$TAG1"
-          git tag -a -m "$UPDATED_TAG" $UPDATED_TAG
-          git tag -a -m "$UPDATED_TAG" v1 -f
+          TAG="v$(cat package.json| jq -r '.version')"
+          git tag -a -m "$TAG" $TAG
+          git tag -a -m "$TAG" v1 -f
           git push --tags -f
-
-
