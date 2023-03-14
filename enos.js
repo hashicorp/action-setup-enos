@@ -13,7 +13,12 @@ const gitHubRepositoryRepo = 'enos';
 const latestVersion = '0.0.16';
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
-  return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
+  try {
+    return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
+    } catch (err) {
+      client.log.error(`Unable to download release asset: ${releaseAsset.name}: ${err}`)
+      throw err
+   }
 }
 
 async function extractReleaseAsset(client, downloadPath) {

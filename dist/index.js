@@ -1,13 +1,13 @@
-/**
- * Copyright (c) HashiCorp, Inc.
- * SPDX-License-Identifier: MPL-2.0
- */
-
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 4582:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
 const process = __nccwpck_require__(7282);
 const core = __nccwpck_require__(2186);
@@ -67,6 +67,11 @@ module.exports = run;
 /***/ 4344:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const exec = __nccwpck_require__(1514);
 const tc = __nccwpck_require__(7784);
 
@@ -77,7 +82,12 @@ const gitHubRepositoryRepo = 'enos';
 const latestVersion = '0.0.16';
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
-  return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
+  try {
+    return await githubRelease.downloadAsset(client, gitHubRepositoryOwner, gitHubRepositoryRepo, releaseAsset, directory);
+    } catch (err) {
+      client.log.error(`Unable to download release asset: ${releaseAsset.name}: ${err}`)
+      throw err
+   }
 }
 
 async function extractReleaseAsset(client, downloadPath) {
@@ -153,6 +163,11 @@ exports.versionNumber = versionNumber;
 /***/ 3098:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const fs = __nccwpck_require__(7147);
 const path = __nccwpck_require__(1017);
 const core = __nccwpck_require__(2186);
@@ -163,15 +178,13 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
 
     try {
         const downloadPath = path.resolve(directory, releaseAsset.name);
-        const file = fs.createWriteStream(downloadPath);
-        
         // Workaround since oktokit asset downloads are broken https://github.com/octokit/core.js/issues/415
         const githubToken = core.getInput('github-token');
 
         if (typeof releaseAsset.url === "undefined") { // template url for tests
             releaseAsset.url = `https://api.github.com/repos/${owner}/${repo}/releases/assets/${releaseAsset.id}`;
         }
-        
+
         const response = await got(releaseAsset.url, {
                 method: 'GET',
                 headers: {
@@ -184,8 +197,12 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
             throw 'Not Found'
         }
 
-        file.write(Buffer.from(response.rawBody));
-        file.end();
+        client.log.info(`Release asset ${releaseAsset.name} size: ${response.rawBody.length}`);
+        if (response.rawBody.length == 0) {
+            throw 'Empty Asset'
+        }
+
+        await fs.promises.writeFile(downloadPath, Buffer.from(response.rawBody));
 
         return downloadPath;
     } catch (err) {
@@ -23970,6 +23987,11 @@ function wrappy (fn, cb) {
 /***/ 1261:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const core = __nccwpck_require__(2186);
 const { GitHub, getOctokitOptions } = __nccwpck_require__(3030)
 const { retry } = __nccwpck_require__(6298)
@@ -24251,6 +24273,11 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const action = __nccwpck_require__(4582);
 
 async function run() {
