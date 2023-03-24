@@ -45,3 +45,14 @@ jobs:
             echo "Action installed version ${version} when ${latest} is latest!";
             exit 1;
           fi
+      - name: "Check action version matches dist version"
+        env:
+          GITHUB_TOKEN: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
+        run: |
+          version=$(enos version)
+          dist_version=$(grep "^const latestVersion =" dist/index.js |awk -F"=" '{print $2}' |tr -d " ';")
+          if [[ "${version}" != "${dist_version}" ]];
+          then
+            echo "dist index.js not updated to latest";
+            exit 1;
+          fi
