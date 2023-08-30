@@ -39,7 +39,7 @@ steps:
      github-token:
        ${{ secrets.GITHUB_TOKEN }}
      version:
-       0.0.19
+       0.0.21
 - name: Check Enos version
   run: enos version
 ```
@@ -62,7 +62,7 @@ To release the updated version of Enos Action run the following steps:
     -  package.json
 3. Run `npm install && npm run all`
 4. Create a PR with updated files above and the generated `dist/index.js`
-5. Get reviewed and the PR merged
+5. Get review and the PR merged
 6. (Automated with `tagrelease` GitHub Actions Workflow) Add github tags to `main` branch and force update `v1` tag by running the following commands
    - `TAG="v$(cat package.json| jq -r '.version')"`
    - `git tag -a -m "$TAG" $TAG`
