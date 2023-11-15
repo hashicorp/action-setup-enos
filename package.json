@@ -1,6 +1,6 @@
 {
   "name": "action-setup-enos",
-  "version": "1.25",
+  "version": "1.26",
   "description": "Setup Enos CLI for GitHub Actions",
   "main": "action.js",
   "scripts": {

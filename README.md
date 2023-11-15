@@ -39,7 +39,7 @@ steps:
      github-token:
        ${{ secrets.GITHUB_TOKEN }}
      version:
-       0.0.23
+       0.0.24
 - name: Check Enos version
   run: enos version
 ```
