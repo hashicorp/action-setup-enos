@@ -1,65 +1,45 @@
 # action-setup-enos
-`action-setup-enos` is a GitHub action that installs and exposes a specified version of the `enos` CLI in a Github runner environment. This action can be run on `ubuntu-latest` and `macos-latest` runners.
 
-The structure and tests are adopted from `setup-hc-releases`.
+`action-setup-enos` downloads and exposes the [enos CLI](https://github.com/hashicorp/enos) into
+the runner environment.
 
-## Prerequisites
+The `enos` CLI requires the `terraform` binary to be in the default `PATH`. You can install Terraform
+using the [setup-terraform](https://github.com/hashicorp/setup-terraform).
 
-### Obtain necessary permissions
-
-In order to use the `action-setup-enos` action and download the `enos` CLI, your repo needs to have a Github secret containing a token with `repo` scope. If your repo is already integrated with CRT, your `ELEVATED_GITHUB_TOKEN` should be sufficient for this. The only additional step is to ensure that your service account user associated with this token has read access to both the `action-setup-enos` [repo](https://github.com/hashicorp/action-setup-enos) and the `enos` [repo](https://github.com/hashicorp/enos). Reach out to the team on Slack in #team-quality to get your user added to both repos.
-
-**Note:** This token must also be "authorized" to the HashiCorp org via SSO. To do this, you would need to log in to Github as the service account user associated with the token, and follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on).
-
-### `setup-terraform` GitHub Action
-
-The `enos` CLI requires the `terraform` binary to be in the default `PATH`. Install the Terraform CLI using `setup-terraform` GitHub
-action. Also set `terraform-wrapper` to `false` as the Terraform wrapper will break Terraform execution in Enos because it changes the output to text when we expect it to be JSON.
-
-Example configuration:
-
-```yaml
-steps:
- - name: Setup Terraform
-   uses: hashicorp/setup-terraform@v1
-   with:
-     # The terraform wrapper will break terraform execution in Enos because
-     # it changes the output to text when we expect it to be JSON.
-     terraform_wrapper: false
-     cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-```
+_NOTE_ Use `setup-terraform@v3` or later, otherwise you'll need to set `terraform-wrapper: false` as
+the wrapper in prior versions will break Terraform execution in Enos.
 
 ## Usage
 
 ```yaml
 steps:
+ - name: Setup Terraform
+   uses: hashicorp/setup-terraform@v3
  - name: Setup Enos
    uses: hashicorp/action-setup-enos@v1
-   with:
-     github-token:
-       ${{ secrets.GITHUB_TOKEN }}
      version:
-       0.0.27
-- name: Check Enos version
-  run: enos version
+       0.0.28
 ```
 
 ## Inputs
+
 The actions supports the following inputs:
 
-- `github-token`: The GitHub secret to use for access to Enos repos, with the permissions described above
-- `version`: The version of `enos` to install, defaulting to `0.0.18`
+- `version`: The version of `enos` to install, defaulting to `0.0.28`
 
 # Update Enos Action
+
 To update the Enos Action run `npm run all` to compile and load the npm modules with the latest code updates.
 
 # Release Process
+
 To release the updated version of Enos Action run the following steps:
+
 1. Update the `Enos` version to the [latest release](https://github.com/hashicorp/enos/releases) in following files:
-    -  README.md
-    -  enos.js
+   - README.md
+   - enos.js
 2. Update the `action-setup-enos` version in
-    -  package.json
+   - package.json
 3. Run `npm install && npm run all`
 4. Create a PR with updated files above and the generated `dist/index.js`
 5. Get review and the PR merged
