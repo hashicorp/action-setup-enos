@@ -1,8 +1,10 @@
 ### How to read this pull request
+
 You may provide an optional explanation of the best way a review might
 approach the changes that are being proposed in this pull request.
 
 ### Checklist
+
 - [ ] The commit message includes an explanation of the changes
 - [ ] Manual validation of the changes have been performed (if possible)
 - [ ] New or modified code has requisite test coverage (if possible)

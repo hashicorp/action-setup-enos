@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
-          node-version: 16
+          node-version: 20
       - name: "NPM Install"
         run: npm install
       - name: "ESLint"
@@ -24,19 +24,19 @@ jobs:
       - name: "NPM Test"
         run: npm test
       - name: "Validate action installation"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: ./ #this took a full day to figure out and I hate it
-        with:
-          github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
       - name: "Check package.json version is not in released tags"
         run: |
-          TAG=$(cat package.json| jq -r ".version")
+          TAG="$(jq -r ".version" < package.json)"
           if git tag -l | grep -q "v$TAG"; then
             echo "Version $TAG already released, update package.json!";
             exit 1
           fi
       - name: "Check action & latest released versions"
         env:
-          GITHUB_TOKEN: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           version=$(enos version)
           latest=$(gh release view -R hashicorp/enos --json tagName --jq '.tagName')
@@ -46,13 +46,10 @@ jobs:
             exit 1;
           fi
       - name: "Check action version matches dist version"
-        env:
-          GITHUB_TOKEN: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
         run: |
           version=$(enos version)
-          dist_version=$(grep "^const latestVersion =" dist/index.js |awk -F"=" '{print $2}' |tr -d " ';")
-          if [[ "${version}" != "${dist_version}" ]];
-          then
-            echo "dist index.js not updated to latest";
+          dist_version=$(grep "^const latestVersion =" dist/index.js |awk -F"=" '{print $2}' | tr -d " ';" | tr -d '"')
+          if [[ "${version}" != "${dist_version}" ]]; then
+            echo "dist index.js not updated to latest. Expected: ${version}, got: ${dist_version}";
             exit 1;
           fi
