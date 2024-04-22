@@ -6,9 +6,9 @@ the runner environment.
 Many `enos` CLI sub-commands require the `terraform` binary to be in the default `PATH`. You can
 install Terraform on the runner using the [setup-terraform](https://github.com/hashicorp/setup-terraform).
 
-[!IMPORTANT]
-Use `setup-terraform@v3` or later, otherwise you'll need to set `terraform-wrapper: false` as
-the wrapper in prior versions will break the `enos` CLI's ability to execute `terraform` correctly.
+> [!IMPORTANT]
+> Use `setup-terraform@v3` or later, otherwise you'll need to set `terraform-wrapper: false` as
+> the wrapper in prior versions will break the `enos` CLI's ability to execute `terraform` correctly.
 
 ## Usage
 
