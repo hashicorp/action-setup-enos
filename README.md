@@ -43,10 +43,12 @@ The actions supports the following inputs:
 
 After the pull request is merged it will automatically be released with the `tagrelease` Github Actions workflow.
 
-[!NOTE]
-If for some reason you need to manually update the `v1` tag you can do so with:
+> [!NOTE]
+> If for some reason you need to manually update the `v1` tag you can do so with:
 
-- `TAG="v$(cat package.json| jq -r '.version')"`
-- `git tag -a -m "$TAG" $TAG`
-- `git tag -a -m "$TAG" v1 -f`
-- `git push --tags -f`
+```shell
+TAG="v$(cat package.json| jq -r '.version')"
+git tag -a -m "$TAG" $TAG
+git tag -a -m "$TAG" v1 -f
+git push --tags -f
+```
