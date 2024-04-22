@@ -1,24 +1,25 @@
 # action-setup-enos
 
-`action-setup-enos` downloads and exposes the [enos CLI](https://github.com/hashicorp/enos) into
+`action-setup-enos` downloads and installs the [enos CLI](https://github.com/hashicorp/enos) into
 the runner environment.
 
-The `enos` CLI requires the `terraform` binary to be in the default `PATH`. You can install Terraform
-using the [setup-terraform](https://github.com/hashicorp/setup-terraform).
+Many `enos` CLI sub-commands require the `terraform` binary to be in the default `PATH`. You can
+install Terraform on the runner using the [setup-terraform](https://github.com/hashicorp/setup-terraform).
 
-_NOTE_ Use `setup-terraform@v3` or later, otherwise you'll need to set `terraform-wrapper: false` as
-the wrapper in prior versions will break Terraform execution in Enos.
+[!IMPORTANT]
+Use `setup-terraform@v3` or later, otherwise you'll need to set `terraform-wrapper: false` as
+the wrapper in prior versions will break the `enos` CLI's ability to execute `terraform` correctly.
 
 ## Usage
 
 ```yaml
 steps:
- - name: Setup Terraform
-   uses: hashicorp/setup-terraform@v3
- - name: Setup Enos
-   uses: hashicorp/action-setup-enos@v1
-     version:
-       0.0.28
+  - name: Set up Terraform
+    uses: hashicorp/setup-terraform@v3
+  - name: Set up Enos
+    uses: hashicorp/action-setup-enos@v1
+    with:
+      version: 0.0.28 # You only need to specify a version if you wish to override the default version
 ```
 
 ## Inputs
@@ -27,24 +28,25 @@ The actions supports the following inputs:
 
 - `version`: The version of `enos` to install, defaulting to `0.0.28`
 
-# Update Enos Action
+## Release a new version of Enos
 
-To update the Enos Action run `npm run all` to compile and load the npm modules with the latest code updates.
+- [ ] Ensure that you have the latest version of Node 20 (Iron) installed
+- [ ] Ensure that you have installed the [copywrite](https://github.com/hashicorp/copywrite) utility
+      for writing copywrite headers.
+- [ ] Bump the version in `package.json`. **This is the action version, not the enos cli version, it wont likely match the enos version**
+- [ ] If we're releasing a new version of `enos`:
+  - [ ] Change the `latestVersion` in `src/enos.js` to reflect the new version.
+  - [ ] Update references to specific version in the `README.md` to the new version.
+- [ ] Run `npm i && npm run all` to compile, format, add license headers, lint, and test the action.
+- [ ] If all of the npm scripts pass then create a PR with the modified files.
+- [ ] Get review and the PR merged
 
-# Release Process
+After the pull request is merged it will automatically be released with the `tagrelease` Github Actions workflow.
 
-To release the updated version of Enos Action run the following steps:
+[!NOTE]
+If for some reason you need to manually update the `v1` tag you can do so with:
 
-1. Update the `Enos` version to the [latest release](https://github.com/hashicorp/enos/releases) in following files:
-   - README.md
-   - enos.js
-2. Update the `action-setup-enos` version in
-   - package.json
-3. Run `npm install && npm run all`
-4. Create a PR with updated files above and the generated `dist/index.js`
-5. Get review and the PR merged
-6. (Automated with `tagrelease` GitHub Actions Workflow) Add github tags to `main` branch and force update `v1` tag by running the following commands
-   - `TAG="v$(cat package.json| jq -r '.version')"`
-   - `git tag -a -m "$TAG" $TAG`
-   - `git tag -a -m "$TAG" v1 -f`
-   - `git push --tags -f`
+- `TAG="v$(cat package.json| jq -r '.version')"`
+- `git tag -a -m "$TAG" $TAG`
+- `git tag -a -m "$TAG" v1 -f`
+- `git push --tags -f`

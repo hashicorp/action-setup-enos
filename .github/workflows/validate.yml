@@ -11,30 +11,25 @@ jobs:
     name: "Validate Action"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - name: Setup Node
-        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
           node-version: 20
-      - name: "NPM Install"
-        run: npm install
-      - name: "ESLint"
-        run: npm run lint
-      - name: "NPM Test"
-        run: npm test
-      - name: "Validate action installation"
+      - run: npm install
+      - name: Run CI checks
+        run: npm run ci
+      - name: Execute the action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: ./ #this took a full day to figure out and I hate it
-      - name: "Check package.json version is not in released tags"
+      - name: Ensure that we haven't already released version
         run: |
           TAG="$(jq -r ".version" < package.json)"
           if git tag -l | grep -q "v$TAG"; then
             echo "Version $TAG already released, update package.json!";
             exit 1
           fi
-      - name: "Check action & latest released versions"
+      - name: Make sure we're releasing the latest stable version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -45,7 +40,7 @@ jobs:
             echo "Action installed version ${version} when ${latest} is latest!";
             exit 1;
           fi
-      - name: "Check action version matches dist version"
+      - name: Make sure the version we install matches what's in compiled action
         run: |
           version=$(enos version)
           dist_version=$(grep "^const latestVersion =" dist/index.js |awk -F"=" '{print $2}' | tr -d " ';" | tr -d '"')
