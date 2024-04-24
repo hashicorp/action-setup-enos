@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const { core } = require("@actions/core");
+const core = require("@actions/core");
 const { Octokit } = require("@octokit/core");
 const { retry } = require("@octokit/plugin-retry");
 const { throttling } = require("@octokit/plugin-throttling");
@@ -12,10 +12,8 @@ const { createUnathenticatedAuth } = require("@octokit/auth-unauthenticated");
 const rateLimitRetries = 5;
 const secondaryRateLimitRetries = 5;
 
-async function client(version) {
-  const Client = Octokit.plugin(throttling, retry).defaults({
-    // This auth strategy is sufficient if we're only using the REST API.
-    authStrategy: createUnathenticatedAuth,
+async function client(version, token) {
+  const opts = {
     throttle: {
       onRateLimit: (retryAfter, options) => {
         core.info(
@@ -47,7 +45,17 @@ async function client(version) {
       },
     },
     userAgent: `action-setup-enos/${version}"`,
-  });
+  };
+
+  if (token !== undefined && token.length > 0) {
+    core.debug(`Using auth-token strategy (${token}:${token.length})`);
+    opts.auth = token;
+  } else {
+    core.debug(`Using auth-unauthenticated strategy`);
+    opts.authStrategy = createUnathenticatedAuth;
+  }
+
+  const Client = Octokit.plugin(throttling, retry).defaults(opts);
 
   return new Client();
 }

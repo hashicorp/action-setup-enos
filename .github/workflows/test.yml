@@ -1,0 +1,63 @@
+---
+name: test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Run CI checks
+        run: npm run ci
+      - name: Ensure that we haven't already released version
+        run: |
+          TAG="$(jq -r ".version" < package.json)"
+          if git tag -l | grep -q "v$TAG"; then
+            echo "Version $TAG already released, update package.json!";
+            exit 1
+          fi
+
+  unauthenticated:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: Run action-setup-enos
+        uses: ./
+      - uses: ./.github/actions/acceptance
+
+  with-github-token-input:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: Run action-setup-enos
+        with:
+          github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
+        uses: ./
+      - uses: ./.github/actions/acceptance
+
+  with-GITHUB_TOKEN-env-var:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: Run action-setup-enos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ./
+      - uses: ./.github/actions/acceptance

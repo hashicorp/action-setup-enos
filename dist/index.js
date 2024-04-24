@@ -40908,15 +40908,21 @@ async function main() {
   try {
     let version = enos.latestVersion;
     const configuredVersion = core.getInput("version");
-    const client = await octokit.client(version);
-    const architecture = mapArch(os.arch());
-    const platform = os.platform();
-    const tempDirectory = process.env["RUNNER_TEMP"] || "";
-
     if (configuredVersion !== undefined && configuredVersion.length > 0) {
       version = configuredVersion;
     }
 
+    let token = process.env["GITHUB_TOKEN"];
+    const configuredToken = core.getInput("github-token");
+    if (configuredToken !== undefined && configuredToken.length > 0) {
+      token = configuredToken;
+    }
+
+    const client = await octokit.client(version, token);
+
+    const architecture = mapArch(os.arch());
+    const platform = os.platform();
+    const tempDirectory = process.env["RUNNER_TEMP"] || "";
     core.debug(`
 Finding download URL for enos (${version}/${platform}/${architecture})
 `);
@@ -40977,7 +40983,7 @@ module.exports = {
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const { core } = __nccwpck_require__(2186);
+const core = __nccwpck_require__(2186);
 const { Octokit } = __nccwpck_require__(6762);
 const { retry } = __nccwpck_require__(6298);
 const { throttling } = __nccwpck_require__(9968);
@@ -40986,10 +40992,8 @@ const { createUnathenticatedAuth } = __nccwpck_require__(9567);
 const rateLimitRetries = 5;
 const secondaryRateLimitRetries = 5;
 
-async function client(version) {
-  const Client = Octokit.plugin(throttling, retry).defaults({
-    // This auth strategy is sufficient if we're only using the REST API.
-    authStrategy: createUnathenticatedAuth,
+async function client(version, token) {
+  const opts = {
     throttle: {
       onRateLimit: (retryAfter, options) => {
         core.info(
@@ -41021,7 +41025,17 @@ async function client(version) {
       },
     },
     userAgent: `action-setup-enos/${version}"`,
-  });
+  };
+
+  if (token !== undefined && token.length > 0) {
+    core.debug(`Using auth-token strategy (${token}:${token.length})`);
+    opts.auth = token;
+  } else {
+    core.debug(`Using auth-unauthenticated strategy`);
+    opts.authStrategy = createUnathenticatedAuth;
+  }
+
+  const Client = Octokit.plugin(throttling, retry).defaults(opts);
 
   return new Client();
 }

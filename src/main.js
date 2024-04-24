@@ -22,15 +22,21 @@ async function main() {
   try {
     let version = enos.latestVersion;
     const configuredVersion = core.getInput("version");
-    const client = await octokit.client(version);
-    const architecture = mapArch(os.arch());
-    const platform = os.platform();
-    const tempDirectory = process.env["RUNNER_TEMP"] || "";
-
     if (configuredVersion !== undefined && configuredVersion.length > 0) {
       version = configuredVersion;
     }
 
+    let token = process.env["GITHUB_TOKEN"];
+    const configuredToken = core.getInput("github-token");
+    if (configuredToken !== undefined && configuredToken.length > 0) {
+      token = configuredToken;
+    }
+
+    const client = await octokit.client(version, token);
+
+    const architecture = mapArch(os.arch());
+    const platform = os.platform();
+    const tempDirectory = process.env["RUNNER_TEMP"] || "";
     core.debug(`
 Finding download URL for enos (${version}/${platform}/${architecture})
 `);
