@@ -21,8 +21,8 @@ jobs:
           fetch-depth: 0 # fetch the whole repo history
       - name: Setup GitHub User
         run: |
-          git config --global user.email "team-secure-quality@hashicorp.com"
-          git config --global user.name "QTI Team"
+          git config --global user.email "team-vault-quality@hashicorp.com"
+          git config --global user.name "Vault Quality Team"
       - name: Tag Release
         run: |
           TAG="v$(jq -r '.version' < package.json)"
