@@ -7,8 +7,10 @@ const fs = require("fs");
 const path = require("path");
 const got = require("got");
 
+const core = require("@actions/core");
+
 async function downloadAsset(client, owner, repo, releaseAsset, directory) {
-  client.log.info(`Downloading release asset: ${releaseAsset.name}`);
+  core.info(`Downloading release asset: ${releaseAsset.name}`);
 
   try {
     const downloadPath = path.resolve(directory, releaseAsset.name);
@@ -17,18 +19,25 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
       releaseAsset.url = `https://api.github.com/repos/${owner}/${repo}/releases/assets/${releaseAsset.id}`;
     }
 
+    const headers = {
+      Accept: "application/octet-stream",
+    };
+    const auth = await client.auth();
+    if (auth.type === "token") {
+      core.debug("Using token auth for download");
+      headers.Authorization = `Bearer ${auth.token}`;
+    }
+
     const response = await got(releaseAsset.url, {
       method: "GET",
-      headers: {
-        accept: "application/octet-stream",
-      },
+      headers,
     });
 
     if (response.statusCode === 404) {
       throw new Error("Not Found");
     }
 
-    client.log.info(
+    core.debug(
       `Release asset ${releaseAsset.name} size: ${response.rawBody.length}`,
     );
     if (response.rawBody.length === 0) {
@@ -39,7 +48,7 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
 
     return downloadPath;
   } catch (err) {
-    client.log.error(
+    core.error(
       `Unable to download release asset (${releaseAsset.name}): ${err}`,
     );
     throw err;
@@ -47,10 +56,10 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
 }
 
 async function getByTag(client, owner, repo, tag) {
-  client.log.info(`Getting release for tag: ${tag}`);
+  core.info(`Getting release for tag: ${tag}`);
 
   try {
-    client.log.debug(`Searching for release by tag: ${owner}/${repo}/${tag}`);
+    core.debug(`Searching for release by tag: ${owner}/${repo}/${tag}`);
     const release = await client.request(
       "GET /repos/{owner}/{repo}/releases/tags/{tag}",
       {
@@ -63,11 +72,11 @@ async function getByTag(client, owner, repo, tag) {
       },
     );
 
-    client.log.debug(`Found release: ${JSON.stringify(release)}`);
+    core.debug(`Found release: ${JSON.stringify(release)}`);
 
     return release.data;
   } catch (err) {
-    client.log.error(`Unable to get release for tag (${tag}): ${err}`);
+    core.error(`Unable to get release for tag (${tag}): ${err}`);
     throw err;
   }
 }

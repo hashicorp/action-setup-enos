@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+const core = require("@actions/core");
 const exec = require("@actions/exec");
 const tc = require("@actions/tool-cache");
 
@@ -23,7 +24,7 @@ async function downloadReleaseAsset(client, releaseAsset, directory) {
       directory,
     );
   } catch (err) {
-    client.log.error(
+    core.error(
       `Unable to download release asset: ${releaseAsset.name}: ${err}`,
     );
     throw err;
@@ -31,14 +32,12 @@ async function downloadReleaseAsset(client, releaseAsset, directory) {
 }
 
 async function extractReleaseAsset(client, downloadPath) {
-  client.log.info(`Extracting release asset: ${downloadPath}`);
+  core.info(`Extracting release asset: ${downloadPath}`);
 
   try {
     return await tc.extractZip(downloadPath);
   } catch (err) {
-    client.log.error(
-      `Unable to extract release asset (${downloadPath}): ${err}`,
-    );
+    core.error(`Unable to extract release asset (${downloadPath}): ${err}`);
     throw err;
   }
 }
