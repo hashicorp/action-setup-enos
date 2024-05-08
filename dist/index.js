@@ -40697,7 +40697,7 @@ const githubRelease = __nccwpck_require__(3219);
 const executableName = "enos";
 const gitHubRepositoryOwner = "hashicorp";
 const gitHubRepositoryRepo = "enos";
-const latestVersion = "0.0.28";
+const latestVersion = "0.0.29";
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
   try {
@@ -40722,9 +40722,7 @@ async function extractReleaseAsset(client, downloadPath) {
   try {
     return await tc.extractZip(downloadPath);
   } catch (err) {
-    core.error(
-      `Unable to extract release asset (${downloadPath}): ${err}`,
-    );
+    core.error(`Unable to extract release asset (${downloadPath}): ${err}`);
     throw err;
   }
 }
