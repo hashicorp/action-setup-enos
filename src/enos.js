@@ -12,7 +12,7 @@ const githubRelease = require("./github-release");
 const executableName = "enos";
 const gitHubRepositoryOwner = "hashicorp";
 const gitHubRepositoryRepo = "enos";
-const latestVersion = "0.0.30";
+const latestVersion = "0.0.31";
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
   try {
