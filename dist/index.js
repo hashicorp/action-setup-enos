@@ -40697,7 +40697,7 @@ const githubRelease = __nccwpck_require__(3219);
 const executableName = "enos";
 const gitHubRepositoryOwner = "hashicorp";
 const gitHubRepositoryRepo = "enos";
-const latestVersion = "0.0.31";
+const latestVersion = "0.0.32";
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
   try {
