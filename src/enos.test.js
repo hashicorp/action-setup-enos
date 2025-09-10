@@ -3,22 +3,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const fs = require("fs");
-const nock = require("nock");
-const os = require("os");
-const path = require("path");
-
-const exec = require("@actions/exec");
-const tc = require("@actions/tool-cache");
-const { Octokit } = require("@octokit/rest");
-
-const enos = require("../src/enos");
+import nock from "nock";
+import fs from "fs";
+import os from "os";
+import path from "path";
+import * as exec from "@actions/exec";
+import * as tc from "@actions/tool-cache";
+import { Octokit } from "@octokit/rest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import * as enos from "./enos";
 
 const client = new Octokit({
   log: console,
 });
 
-beforeAll(() => {
+beforeEach(() => {
   nock.disableNetConnect();
 });
 
@@ -35,10 +34,16 @@ describe("download release asset", () => {
         if (err) throw err;
 
         const expectedPath = path.resolve(directory, releaseAsset.name);
+        const assetPath = path.resolve(
+          __dirname,
+          "../",
+          "__tests__",
+          "test.zip",
+        );
 
         nock("https://api.github.com")
           .get("/repos/hashicorp/enos/releases/assets/1")
-          .replyWithFile(200, path.resolve(__dirname, "test.zip"), {
+          .replyWithFile(200, assetPath, {
             "content-type": "application/octet-stream",
           });
 
@@ -48,14 +53,12 @@ describe("download release asset", () => {
           directory,
         );
 
-        await expect(downloadPath).toEqual(expectedPath);
+        expect(downloadPath).toEqual(expectedPath);
 
         fs.readFile(downloadPath, null, async (readErr, data) => {
           if (readErr) throw readErr;
 
-          await expect(data).toEqual(
-            fs.readFileSync(path.resolve(__dirname, "test.zip")),
-          );
+          expect(data).toEqual(fs.readFileSync(assetPath));
         });
       },
     );
@@ -88,26 +91,26 @@ describe("download release asset", () => {
 
 describe("extract release asset", () => {
   test("successful", async () => {
-    const spy = jest.spyOn(tc, "extractZip");
-    spy.mockReturnValue("/tmp/test");
+    const spy = vi.spyOn(tc, "extractZip");
+    spy.mockImplementation(() => "/tmp/test");
 
     const result = await enos.extractReleaseAsset(
       client,
       "/tmp/test/test_v1.0.0_linux_amd64.zip",
     );
 
-    await expect(spy).toHaveBeenCalled();
-    await expect(result).toEqual("/tmp/test");
+    expect(spy).toHaveBeenCalled();
+    expect(result).toEqual("/tmp/test");
   });
 
   test("throws error", async () => {
-    const spy = jest.spyOn(tc, "extractZip");
+    const spy = vi.spyOn(tc, "extractZip");
     spy.mockRejectedValue(new Error("executable not found: zip"));
 
     await expect(
       enos.extractReleaseAsset(client, "/tmp/test/test_v1.0.0_linux_amd64.zip"),
     ).rejects.toThrow("executable not found");
-    await expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });
 
@@ -142,7 +145,7 @@ describe("get release asset", () => {
       goArchitecture,
     );
 
-    await expect(releaseAsset).toEqual(
+    expect(releaseAsset).toEqual(
       mockRelease.assets.find(
         (asset) =>
           asset.name.includes(goOperatingSystem) &&
@@ -189,40 +192,40 @@ describe("get release asset", () => {
 
 describe("version", () => {
   test("stdout", async () => {
-    const spy = jest.spyOn(exec, "exec");
-    spy.mockImplementation((commandLine, args, options) => {
+    const spy = vi.spyOn(exec, "exec");
+    spy.mockImplementation((_commandLine, _args, options) => {
       options.listeners.stdout("enos v0.0.2 ()");
       Promise.resolve();
     });
 
     const result = await enos.versionCmdOutput();
 
-    await expect(spy).toHaveBeenCalled();
-    await expect(result).toEqual({ stderr: "", stdout: "enos v0.0.2 ()" });
+    expect(spy).toHaveBeenCalled();
+    expect(result).toEqual({ stderr: "", stdout: "enos v0.0.2 ()" });
   });
 
   test("stderr", async () => {
-    const spy = jest.spyOn(exec, "exec");
-    spy.mockImplementation((commandLine, args, options) => {
+    const spy = vi.spyOn(exec, "exec");
+    spy.mockImplementation((_commandLine, _args, options) => {
       options.listeners.stderr("executable not found: enos");
       Promise.resolve();
     });
 
     const result = await enos.versionCmdOutput();
 
-    await expect(spy).toHaveBeenCalled();
-    await expect(result).toEqual({
+    expect(spy).toHaveBeenCalled();
+    expect(result).toEqual({
       stderr: "executable not found: enos",
       stdout: "",
     });
   });
 
   test("throws exec error", async () => {
-    const spy = jest.spyOn(exec, "exec");
+    const spy = vi.spyOn(exec, "exec");
     spy.mockImplementation(() => Promise.resolve());
     spy.mockRejectedValue(new Error("child process missing stdin"));
 
     await expect(enos.versionCmdOutput()).rejects.toThrow("error executing");
-    await expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });

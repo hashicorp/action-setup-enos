@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const process = require("process");
-const os = require("os");
+import process from "process";
+import os from "os";
 
-const core = require("@actions/core");
+import * as core from "@actions/core";
 
-const enos = require("./enos");
-const octokit = require("./octokit");
+import * as octokit from "./octokit.js";
+import * as enos from "./enos.js";
 
 function mapArch(arch) {
   const mappings = {
@@ -18,7 +18,7 @@ function mapArch(arch) {
   return mappings[arch] || arch;
 }
 
-async function main() {
+export async function main() {
   try {
     let version = enos.latestVersion;
     const configuredVersion = core.getInput("version");
@@ -81,7 +81,3 @@ Found enos version ${outputs.version} in path
     console.error(err);
   }
 }
-
-module.exports = {
-  main,
-};

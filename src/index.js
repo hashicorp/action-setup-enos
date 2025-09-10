@@ -3,6 +3,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const { main } = require("./main");
+import { main } from "./main.js";
 
 main();

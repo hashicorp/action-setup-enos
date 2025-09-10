@@ -3,16 +3,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const core = require("@actions/core");
-const { Octokit } = require("@octokit/core");
-const { retry } = require("@octokit/plugin-retry");
-const { throttling } = require("@octokit/plugin-throttling");
-const { createUnathenticatedAuth } = require("@octokit/auth-unauthenticated");
+import * as core from "@actions/core";
+import { Octokit } from "@octokit/core";
+import { retry } from "@octokit/plugin-retry";
+import { throttling } from "@octokit/plugin-throttling";
+import { createUnauthenticatedAuth } from "@octokit/auth-unauthenticated";
 
 const rateLimitRetries = 5;
 const secondaryRateLimitRetries = 5;
 
-async function client(version, token) {
+export async function client(version, token) {
   const opts = {
     throttle: {
       onRateLimit: (retryAfter, options) => {
@@ -52,14 +52,12 @@ async function client(version, token) {
     opts.auth = token;
   } else {
     core.debug(`Using auth-unauthenticated strategy`);
-    opts.authStrategy = createUnathenticatedAuth;
+    opts.authStrategy = createUnauthenticatedAuth({
+      reason: "No token has been configured",
+    }).auth;
   }
 
   const Client = Octokit.plugin(throttling, retry).defaults(opts);
 
   return new Client();
 }
-
-module.exports = {
-  client,
-};

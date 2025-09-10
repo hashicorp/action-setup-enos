@@ -3,19 +3,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const fs = require("fs");
-const nock = require("nock");
-const os = require("os");
-const path = require("path");
-const { Octokit } = require("@octokit/rest");
-
-const githubRelease = require("../src/github-release");
+import nock from "nock";
+import fs from "fs";
+import os from "os";
+import path from "path";
+import { Octokit } from "@octokit/rest";
+import { getByTag, downloadAsset } from "../src/github-release";
+import { beforeEach, describe, expect, test } from "vitest";
 
 const client = new Octokit({
   log: console,
 });
 
-beforeAll(() => {
+beforeEach(() => {
   nock.disableNetConnect();
 });
 
@@ -35,11 +35,15 @@ describe("download asset", () => {
 
         nock("https://api.github.com")
           .get(`/repos/testowner/testrepo/releases/assets/1`)
-          .replyWithFile(200, path.resolve(__dirname, "test.zip"), {
-            "content-type": "application/octet-stream",
-          });
+          .replyWithFile(
+            200,
+            path.resolve(__dirname, "../", "__tests__", "test.zip"),
+            {
+              "content-type": "application/octet-stream",
+            },
+          );
 
-        const downloadPath = await githubRelease.downloadAsset(
+        const downloadPath = await downloadAsset(
           client,
           "testowner",
           "testrepo",
@@ -47,13 +51,15 @@ describe("download asset", () => {
           directory,
         );
 
-        await expect(downloadPath).toEqual(expectedPath);
+        expect(downloadPath).toEqual(expectedPath);
 
         fs.readFile(downloadPath, null, async (readErr, data) => {
           if (readErr) throw readErr;
 
-          await expect(data).toEqual(
-            fs.readFileSync(path.resolve(__dirname, "test.zip")),
+          expect(data).toEqual(
+            fs.readFileSync(
+              path.resolve(__dirname, "../", "__tests__", "test.zip"),
+            ),
           );
         });
       },
@@ -75,7 +81,7 @@ describe("download asset", () => {
           .reply(404, "Not Found");
 
         await expect(
-          githubRelease.downloadAsset(
+          downloadAsset(
             client,
             "testowner",
             "testrepo",
@@ -98,14 +104,9 @@ describe("get by tag", () => {
       .get(`/repos/testowner/testrepo/releases/tags/v1.0.0`)
       .reply(200, mockRelease);
 
-    const release = await githubRelease.getByTag(
-      client,
-      "testowner",
-      "testrepo",
-      "v1.0.0",
-    );
+    const release = await getByTag(client, "testowner", "testrepo", "v1.0.0");
 
-    await expect(release).toEqual(mockRelease);
+    expect(release).toEqual(mockRelease);
   });
 
   test("throws error", async () => {
@@ -114,7 +115,7 @@ describe("get by tag", () => {
       .reply(404, "Not Found");
 
     await expect(
-      githubRelease.getByTag(client, "testowner", "testrepo", "v1.0.0"),
+      getByTag(client, "testowner", "testrepo", "v1.0.0"),
     ).rejects.toThrow("Not Found");
   });
 });
