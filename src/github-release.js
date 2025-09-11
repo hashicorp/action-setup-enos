@@ -3,13 +3,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const fs = require("fs");
-const path = require("path");
-const got = require("got");
+import fs from "fs";
+import path from "path";
+import got from "got";
 
-const core = require("@actions/core");
+import * as core from "@actions/core";
 
-async function downloadAsset(client, owner, repo, releaseAsset, directory) {
+export async function downloadAsset(
+  client,
+  owner,
+  repo,
+  releaseAsset,
+  directory,
+) {
   core.info(`Downloading release asset: ${releaseAsset.name}`);
 
   try {
@@ -55,7 +61,7 @@ async function downloadAsset(client, owner, repo, releaseAsset, directory) {
   }
 }
 
-async function getByTag(client, owner, repo, tag) {
+export async function getByTag(client, owner, repo, tag) {
   core.info(`Getting release for tag: ${tag}`);
 
   try {
@@ -80,8 +86,3 @@ async function getByTag(client, owner, repo, tag) {
     throw err;
   }
 }
-
-module.exports = {
-  downloadAsset,
-  getByTag,
-};

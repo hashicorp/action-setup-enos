@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20
+          node-version: 24
       - run: npm install
       - name: Run CI checks
         run: npm run ci
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20
+          node-version: 24
       - name: Run action-setup-enos
         uses: ./
       - uses: ./.github/actions/acceptance
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20
+          node-version: 24
       - name: Run action-setup-enos
         with:
           github-token: ${{ secrets.SERVICE_USER_GITHUB_TOKEN }}
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20
+          node-version: 24
       - name: Run action-setup-enos
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

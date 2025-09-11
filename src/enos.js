@@ -3,18 +3,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const core = require("@actions/core");
-const exec = require("@actions/exec");
-const tc = require("@actions/tool-cache");
+import * as core from "@actions/core";
+import * as exec from "@actions/exec";
+import * as tc from "@actions/tool-cache";
 
-const githubRelease = require("./github-release");
+import * as githubRelease from "./github-release.js";
 
 const executableName = "enos";
 const gitHubRepositoryOwner = "hashicorp";
 const gitHubRepositoryRepo = "enos";
-const latestVersion = "0.0.32";
 
-async function downloadReleaseAsset(client, releaseAsset, directory) {
+export const latestVersion = "0.0.33";
+
+export async function downloadReleaseAsset(client, releaseAsset, directory) {
   try {
     return await githubRelease.downloadAsset(
       client,
@@ -31,7 +32,7 @@ async function downloadReleaseAsset(client, releaseAsset, directory) {
   }
 }
 
-async function extractReleaseAsset(client, downloadPath) {
+export async function extractReleaseAsset(client, downloadPath) {
   core.info(`Extracting release asset: ${downloadPath}`);
 
   try {
@@ -42,7 +43,7 @@ async function extractReleaseAsset(client, downloadPath) {
   }
 }
 
-async function getReleaseAsset(client, version, platform, architecture) {
+export async function getReleaseAsset(client, version, platform, architecture) {
   const release = await githubRelease.getByTag(
     client,
     gitHubRepositoryOwner,
@@ -61,7 +62,7 @@ async function getReleaseAsset(client, version, platform, architecture) {
   return asset;
 }
 
-async function versionCmdOutput() {
+export async function versionCmdOutput() {
   let stderr = "";
   let stdout = "";
 
@@ -88,7 +89,7 @@ async function versionCmdOutput() {
   };
 }
 
-async function versionNumber() {
+export async function versionNumber() {
   const { stderr, stdout } = await versionCmdOutput();
 
   if (stderr.length > 0) {
@@ -97,12 +98,3 @@ async function versionNumber() {
 
   return stdout;
 }
-
-module.exports = {
-  downloadReleaseAsset,
-  extractReleaseAsset,
-  getReleaseAsset,
-  latestVersion,
-  versionCmdOutput,
-  versionNumber,
-};
