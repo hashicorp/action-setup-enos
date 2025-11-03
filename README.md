@@ -19,19 +19,19 @@ steps:
   - name: Set up Enos
     uses: hashicorp/action-setup-enos@v1
     with:
-      version: 0.0.33 # You only need to specify a version if you wish to override the default version
+      version: 0.0.34 # You only need to specify a version if you wish to override the default version
 ```
 
 ## Inputs
 
 The actions supports the following inputs:
 
-- `version`: The version of `enos` to install, defaulting to `0.0.33`
+- `version`: The version of `enos` to install, defaulting to `0.0.34`
 
 ## Release a new version of Enos
 
-- [ ] Ensure that you have the latest version of Node 20 (Iron) installed
-- [ ] Ensure that you have installed the [copywrite](https://github.com/hashicorp/copywrite) utility
+- [ ] Ensure that you have the latest version of Node 24 (krypton) installed
+- [ ] Ensure that you have installed the [copywrite](https://github.com/hashicorp/copywrite_ibm) utility
       for writing copywrite headers.
 - [ ] Bump the version in `package.json`. **This is the action version, not the enos cli version, it wont likely match the enos version**
 - [ ] If we're releasing a new version of `enos`:

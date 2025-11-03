@@ -1,5 +1,5 @@
 /**
- * Copyright (c) HashiCorp, Inc.
+ * Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -13,7 +13,7 @@ const executableName = "enos";
 const gitHubRepositoryOwner = "hashicorp";
 const gitHubRepositoryRepo = "enos";
 
-export const latestVersion = "0.0.33";
+export const latestVersion = "0.0.34";
 
 export async function downloadReleaseAsset(client, releaseAsset, directory) {
   try {
