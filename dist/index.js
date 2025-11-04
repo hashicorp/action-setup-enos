@@ -1,5 +1,5 @@
 /**
- * Copyright (c) HashiCorp, Inc.
+ * Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -37210,7 +37210,7 @@ var createUnauthenticatedAuth = function createUnauthenticatedAuth2(options) {
 
 ;// CONCATENATED MODULE: ./src/octokit.js
 /**
- * Copyright (c) HashiCorp, Inc.
+ * Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -44388,7 +44388,7 @@ const got = source_create(defaults);
 
 ;// CONCATENATED MODULE: ./src/github-release.js
 /**
- * Copyright (c) HashiCorp, Inc.
+ * Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -44478,7 +44478,7 @@ async function getByTag(client, owner, repo, tag) {
 
 ;// CONCATENATED MODULE: ./src/enos.js
 /**
- * Copyright (c) HashiCorp, Inc.
+ * Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -44492,7 +44492,7 @@ const executableName = "enos";
 const gitHubRepositoryOwner = "hashicorp";
 const gitHubRepositoryRepo = "enos";
 
-const latestVersion = "0.0.33";
+const latestVersion = "0.0.34";
 
 async function downloadReleaseAsset(client, releaseAsset, directory) {
   try {
@@ -44580,7 +44580,7 @@ async function versionNumber() {
 
 ;// CONCATENATED MODULE: ./src/main.js
 /**
- * Copyright (c) HashiCorp, Inc.
+ * Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -44665,7 +44665,7 @@ Found enos version ${outputs.version} in path
 
 ;// CONCATENATED MODULE: ./src/index.js
 /**
- * Copyright (c) HashiCorp, Inc.
+ * Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: MPL-2.0
  */
 
