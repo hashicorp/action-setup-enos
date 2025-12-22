@@ -19,14 +19,14 @@ steps:
   - name: Set up Enos
     uses: hashicorp/action-setup-enos@v1
     with:
-      version: 0.0.34 # You only need to specify a version if you wish to override the default version
+      version: 0.0.35 # You only need to specify a version if you wish to override the default version
 ```
 
 ## Inputs
 
 The actions supports the following inputs:
 
-- `version`: The version of `enos` to install, defaulting to `0.0.34`
+- `version`: The version of `enos` to install, defaulting to `0.0.35`
 
 ## Release a new version of Enos
 
