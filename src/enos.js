@@ -13,7 +13,7 @@ const executableName = "enos";
 const gitHubRepositoryOwner = "hashicorp";
 const gitHubRepositoryRepo = "enos";
 
-export const latestVersion = "0.0.34";
+export const latestVersion = "0.0.35";
 
 export async function downloadReleaseAsset(client, releaseAsset, directory) {
   try {
