@@ -7,11 +7,22 @@ import nock from "nock";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import * as exec from "@actions/exec";
-import * as tc from "@actions/tool-cache";
 import { Octokit } from "@octokit/rest";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import * as enos from "./enos";
+
+// Mock @actions/exec
+vi.mock("@actions/exec", () => ({
+  exec: vi.fn(),
+}));
+
+// Mock @actions/tool-cache
+vi.mock("@actions/tool-cache", () => ({
+  extractZip: vi.fn(),
+}));
+
+import * as exec from "@actions/exec";
+import * as tc from "@actions/tool-cache";
 
 const client = new Octokit({
   log: console,
@@ -91,26 +102,26 @@ describe("download release asset", () => {
 
 describe("extract release asset", () => {
   test("successful", async () => {
-    const spy = vi.spyOn(tc, "extractZip");
-    spy.mockImplementation(() => "/tmp/test");
+    vi.mocked(tc.extractZip).mockResolvedValue("/tmp/test");
 
     const result = await enos.extractReleaseAsset(
       client,
       "/tmp/test/test_v1.0.0_linux_amd64.zip",
     );
 
-    expect(spy).toHaveBeenCalled();
+    expect(tc.extractZip).toHaveBeenCalled();
     expect(result).toEqual("/tmp/test");
   });
 
   test("throws error", async () => {
-    const spy = vi.spyOn(tc, "extractZip");
-    spy.mockRejectedValue(new Error("executable not found: zip"));
+    vi.mocked(tc.extractZip).mockRejectedValue(
+      new Error("executable not found: zip"),
+    );
 
     await expect(
       enos.extractReleaseAsset(client, "/tmp/test/test_v1.0.0_linux_amd64.zip"),
     ).rejects.toThrow("executable not found");
-    expect(spy).toHaveBeenCalled();
+    expect(tc.extractZip).toHaveBeenCalled();
   });
 });
 
@@ -192,28 +203,26 @@ describe("get release asset", () => {
 
 describe("version", () => {
   test("stdout", async () => {
-    const spy = vi.spyOn(exec, "exec");
-    spy.mockImplementation((_commandLine, _args, options) => {
+    vi.mocked(exec.exec).mockImplementation((_commandLine, _args, options) => {
       options.listeners.stdout("enos v0.0.2 ()");
-      Promise.resolve();
+      return Promise.resolve(0);
     });
 
     const result = await enos.versionCmdOutput();
 
-    expect(spy).toHaveBeenCalled();
+    expect(exec.exec).toHaveBeenCalled();
     expect(result).toEqual({ stderr: "", stdout: "enos v0.0.2 ()" });
   });
 
   test("stderr", async () => {
-    const spy = vi.spyOn(exec, "exec");
-    spy.mockImplementation((_commandLine, _args, options) => {
+    vi.mocked(exec.exec).mockImplementation((_commandLine, _args, options) => {
       options.listeners.stderr("executable not found: enos");
-      Promise.resolve();
+      return Promise.resolve(0);
     });
 
     const result = await enos.versionCmdOutput();
 
-    expect(spy).toHaveBeenCalled();
+    expect(exec.exec).toHaveBeenCalled();
     expect(result).toEqual({
       stderr: "executable not found: enos",
       stdout: "",
@@ -221,11 +230,11 @@ describe("version", () => {
   });
 
   test("throws exec error", async () => {
-    const spy = vi.spyOn(exec, "exec");
-    spy.mockImplementation(() => Promise.resolve());
-    spy.mockRejectedValue(new Error("child process missing stdin"));
+    vi.mocked(exec.exec).mockRejectedValue(
+      new Error("child process missing stdin"),
+    );
 
     await expect(enos.versionCmdOutput()).rejects.toThrow("error executing");
-    expect(spy).toHaveBeenCalled();
+    expect(exec.exec).toHaveBeenCalled();
   });
 });
