@@ -80,7 +80,9 @@ export async function versionCmdOutput() {
   try {
     await exec.exec(executableName, ["version"], execOptions);
   } catch (err) {
-    throw new Error(`error executing ${executableName}: ${err}`);
+    throw new Error(`error executing ${executableName}: ${err}`, {
+      cause: err,
+    });
   }
 
   return {
