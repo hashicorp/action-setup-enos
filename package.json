@@ -1,7 +1,7 @@
 {
   "name": "action-setup-enos",
   "type": "module",
-  "version": "1.52",
+  "version": "1.53",
   "description": "Setup Enos CLI for GitHub Actions",
   "scripts": {
     "all": "npm run build && npm run ci",
@@ -9,7 +9,7 @@
     "ci": "npm run lint && npm run format:check && npm run test",
     "format:write": "npx prettier --write .",
     "format:check": "npx prettier --check .",
-    "headers": "copywrite_ibm headers --year1 2022 --year2 2025",
+    "headers": "copywrite_ibm headers --year1 2022 --year2 2026",
     "lint": "npx eslint ./src",
     "prepare": "npx ncc build src/index.js -o dist --license licenses.txt",
     "test": "npx vitest run"
@@ -37,15 +37,15 @@
   },
   "homepage": "https://github.com/hashicorp/action-setup-enos#readme",
   "dependencies": {
-    "@actions/core": "^3.0.0",
+    "@actions/core": "^3.0.1",
     "@actions/exec": "^3.0.0",
-    "@actions/http-client": "^4.0.0",
+    "@actions/http-client": "^4.0.1",
     "@actions/tool-cache": "^4.0.0",
     "@octokit/auth-unauthenticated": "^7.0.3",
     "@octokit/core": "^7.0.6",
     "@octokit/plugin-retry": "^8.1.0",
     "@octokit/plugin-throttling": "^11.0.3",
-    "got": "^14.6.6"
+    "got": "^15.0.5"
   },
   "overrides": {
     "undici": "^6.24.0"
@@ -55,11 +55,11 @@
     "@eslint/js": "^10.0.1",
     "@octokit/rest": "^22.0.1",
     "@vercel/ncc": "^0.38.4",
-    "eslint": "^10.0.3",
-    "globals": "^17.4.0",
-    "nock": "^14.0.11",
-    "npm-check-updates": "^19.6.3",
-    "prettier": "^3.8.1",
-    "vitest": "^4.1.0"
+    "eslint": "^10.4.1",
+    "globals": "^17.6.0",
+    "nock": "^14.0.15",
+    "npm-check-updates": "^22.2.3",
+    "prettier": "^3.8.3",
+    "vitest": "^4.1.8"
   }
 }
