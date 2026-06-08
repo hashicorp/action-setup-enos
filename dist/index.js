@@ -40418,7 +40418,7 @@ var createUnauthenticatedAuth = function createUnauthenticatedAuth2(options) {
 
 ;// CONCATENATED MODULE: ./src/octokit.js
 /**
- * Copyright IBM Corp. 2022, 2025
+ * Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -51602,7 +51602,7 @@ const got = source_create(defaults);
 
 ;// CONCATENATED MODULE: ./src/github-release.js
 /**
- * Copyright IBM Corp. 2022, 2025
+ * Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -51796,7 +51796,7 @@ async function versionNumber() {
 
 ;// CONCATENATED MODULE: ./src/main.js
 /**
- * Copyright IBM Corp. 2022, 2025
+ * Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: MPL-2.0
  */
 
@@ -51881,7 +51881,7 @@ Found enos version ${outputs.version} in path
 
 ;// CONCATENATED MODULE: ./src/index.js
 /**
- * Copyright IBM Corp. 2022, 2025
+ * Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: MPL-2.0
  */
 
