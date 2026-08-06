@@ -52,3 +52,9 @@ git tag -a -m "$TAG" $TAG
 git tag -a -m "$TAG" v1 -f
 git push --tags -f
 ```
+
+## Updating Deps
+
+By default npm is fairly locked down in [.npmrc](`./.npmrc`). You can use `npx npm-check-updates` and `npm audit` to
+help resolve fixes as they respect the minimum age. Any scripts that include scripts ought to be audited and approved
+before they are run. If you need a newer dep please audit each carefully before bypassing the minimum age.
