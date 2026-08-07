@@ -1,7 +1,7 @@
 {
   "name": "action-setup-enos",
   "type": "module",
-  "version": "1.53",
+  "version": "1.54",
   "description": "Setup Enos CLI for GitHub Actions",
   "scripts": {
     "all": "npm run build && npm run ci",
@@ -61,5 +61,8 @@
     "npm-check-updates": "^22.2.3",
     "prettier": "^3.8.3",
     "vitest": "^4.1.8"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true
   }
 }
